@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Final</title>
+  </head>
+  <style>
+    .error {
+      color: red;
+    }
+    div {
+      padding: 3px;
+      margin: 3px;
+    }
+    button {
+      padding: 3px;
+      margin: 3px;
+    }
+    table,
+    th,
+    td {
+      padding: 3px;
+      margin: 3px;      
+      border-collapse: collapse;
+      table-layout: fixed;
+      border: 1px solid gray;
+    }
+  </style>
+  <body>
+    <div><strong>Enter a Fahrenheit Temp to convert to Celsius</strong></div>
+
+    <div>Temp to convert:</div>
+    <div><input id="tempToConvert" /></div>
+    <div id="tempError" class="error"></div>
+
+    <div>
+      <span>Convert to</span>
+      <select id="type">
+        <option value="celsius">Celsius</option>
+        <option value="fahrenheit">Fahrenheit</option>
+      </select>
+      <button id="convert">Convert</button>
+    </div>
+
+    <div id="demo"></div>
+    <button id="showLog">Show Log</button>
+
+    <div id="logReport"></div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <!--
+      Here are the requirements:
+      1. Clear logReport whenever the “slowLog” button is pressed.
+      2. Loop through the array and display each Key/Value field in our object
+         a. tempToConvert
+         b. type
+         c. convertedTemp
+         d. output
+    -->
+    <script>
+      $(function() {
+        var conversionLog = [];
+
+        $("#tempToConvert").on("keypress keyup blur", function(event) {
+          // "Regular Expression" --   https://regex101.com/
+          $(this).val(
+            $(this)
+              .val()
+              .replace(/[^0-9\.]/g, "")
+          );
+          if (
+            (event.which != 46 ||
+              $(this)
+                .val()
+                .indexOf(".") != -1) &&
+            (event.which < 48 || event.which > 57)
+          ) {
+            event.preventDefault();
+          }
+        });
+
+        $("#convert").click(function() {
+          var tempToConvert = $("#tempToConvert").val();
+          var type = $("#type").val();
+
+          if (isValidNumber(tempToConvert)) {
+            $("#tempError").text("");
+            var convertedTemp = convertTemp(type, tempToConvert);
+            var output =
+              convertedTemp.toFixed(2) +
+              " " +
+              (type.toLowerCase() === "fahrenheit" ? "&#8457;" : "&#8451;");
+
+            conversionLog.push({
+              tempToConvert: tempToConvert,
+              type: type,
+              convertedTemp: convertedTemp,
+              output: output
+            });
+
+            //https://www.w3schools.com/charsets/ref_utf_letterlike.asp
+            //Switched to html() from text()  Because I control the output.
+            $("#demo").html(output);
+          } else {
+            var tempToConvert = $("#temp").val("");
+            $("#tempError").text("Please enter a valid number");
+            $("#demo").text("");
+          }
+        });
+
+        $("#showLog").click(function() {
+          console.log(conversionLog);
+          // 1. Clear logReport whenever the “slowLog” button is pressed.
+          $("#logReport").text("");
+
+          // set header of table
+          var table = $("<table>");
+          var thead = $("<thead>");
+          var row = $("<tr>");
+          row.append("<th>Temp to convert</th>");
+          row.append("<th>Temp type</th>");
+          row.append("<th>Converted temp</th>");
+          row.append("<th>Output</th>");
+          thead.append(row);
+          table.append(thead);
+          var tbody = $("<tbody>");
+          for (var idx = 0; idx < conversionLog.length; idx++) {
+            row = $("<tr>");
+            row.append("<td>" + conversionLog[idx].tempToConvert + "</td>");
+
+            row.append("<td>" + conversionLog[idx].type + "</td>");
+            row.append("<td>" + conversionLog[idx].convertedTemp.toFixed(2) + "</td>");
+            row.append("<td>" + conversionLog[idx].output + "</td>");
+
+            tbody.append(row);
+          }
+          table.append(tbody);
+
+          if (conversionLog.length > 0) {
+            $("#logReport").append(table);
+          }
+        });
+      });
+
+      function isValidNumber(valToTest) {
+        return $.isNumeric(valToTest);
+      }
+
+      function convertTemp(type, temp) {
+        switch (type.toLowerCase()) {
+          case "celsius":
+            return (convertedTemp = toCelsius(temp));
+          case "fahrenheit":
+            return (convertedTemp = toFahrenheit(temp));
+          default:
+            //Should never get here since we control value.
+            return "Unknown Temp Type!!";
+        }
+      }
+
+      function toCelsius(f) {
+        return (5 / 9) * (f - 32);
+      }
+
+      function toFahrenheit(c) {
+        return (c * 9) / 5 + 32;
+      }
+    </script>
+  </body>
+</html>
