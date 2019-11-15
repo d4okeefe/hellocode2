@@ -115,16 +115,14 @@
           // set header of table
           var table = $("<table>");
           var thead = $("<thead>");
-          var row = $("<tr>");
-          row.append("<th>Temp to convert</th>");
-          row.append("<th>Temp type</th>");
-          row.append("<th>Converted temp</th>");
-          row.append("<th>Output</th>");
-          thead.append(row);
+          thead.append("<th>Temp to convert</th>");
+          thead.append("<th>Temp type</th>");
+          thead.append("<th>Converted temp</th>");
+          thead.append("<th>Output</th>");
           table.append(thead);
           var tbody = $("<tbody>");
           for (var idx = 0; idx < conversionLog.length; idx++) {
-            row = $("<tr>");
+            var row = $("<tr>");
             row.append("<td>" + conversionLog[idx].tempToConvert + "</td>");
 
             row.append("<td>" + conversionLog[idx].type + "</td>");
