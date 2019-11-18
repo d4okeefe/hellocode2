@@ -21,7 +21,7 @@ $(function () {
                 $("#footer").html("<div>Generated at: " + timePosted + "</div>");
 
                 var table = $("<table>");
-                //table.addClass("table").addClass("table-striped");
+                table.addClass("table");
                 var thead = $("<thead>");
                 var header_cells =
                     "<th>When</th>" +
